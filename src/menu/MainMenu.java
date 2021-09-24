@@ -1,6 +1,7 @@
 package menu;
 
 import answers.Answer;
+import java.util.Arrays;
 import java.util.Scanner;
 import questions.Question;
 
@@ -9,11 +10,13 @@ public class MainMenu {
     public static Question first = new Question("Some question text.", "Agris", "first");
     public static Question second = new Question("What is you favorite color?", "Agris", "second");
     public static Question third = new Question("What is the meaning of life?", "Agris", "third");
-    public static Question fourth;
+    //  public static Question fourth;
     public static final String GREEN = "\033[0;32m";
     public static final String WHITE = "\033[0;37m";
 
-    public static Answer afirst = new Answer("This is a test answer", "testUser","identifier");
+    public static Question[] qArray = {first, second, third, null, null, null, null};
+    public static int numberOfQuestions = 3;
+    public static Answer afirst = new Answer("This is a test answer", "testUser", "identifier");
 
     public static void printMenu() {
         Scanner scanner = new Scanner(System.in);
@@ -33,21 +36,32 @@ public class MainMenu {
         switch (inputSelection) {
             case 1:
                 System.out.println("Here will be questions");
-                System.out.println(GREEN);
-                System.out.println(first);
-                System.out.println(second);
-                System.out.println(third);
-                System.out.println(fourth);
-                System.out.println(WHITE + "----");
+                System.out.println(Arrays.toString(qArray));
 
                 break;
             case 2:
-                System.out.println("Here will be answers - what question do you want to check?");
-                System.out.println(afirst);
+                System.out.println("Here will be answers - what question do you want to check? [1- " + numberOfQuestions + "]");
+                int questionSelection = scanner.nextInt() - 1;
+                scanner.nextLine();
+                if (questionSelection >= 0
+                    && inputSelection <= numberOfQuestions - 1) {
+                    // can be also extended with a question to user which of the answers to show (not all)
+                    System.out.println(Arrays.toString(qArray[questionSelection].getAnswer()));
+                } else {
+                    System.out.println("There is no questions with this number, please try again.");
+                }
                 break;
             case 3:
                 //creating new question logic
-                fourth = createNewQuestion(scanner);
+                System.out.println(numberOfQuestions);
+                System.out.println(qArray.length);
+                System.out.println(" ---- ");
+                if (numberOfQuestions == qArray.length) {
+                    System.out.println("Sorry, our data space is full already.");
+                } else {
+                    qArray[numberOfQuestions] = createNewQuestion(scanner);
+                    numberOfQuestions++;
+                }
                 //  Answer afirst = new Answer("This is a test answer", "testUser","identifier");
                 break;
             case 4:
@@ -66,58 +80,37 @@ public class MainMenu {
 
     }
 
-    public static void answerMenu(Scanner scanner){
+    public static void answerMenu(Scanner scanner) {
         System.out.println("Welcome to the answer creator, what is your name: ");
         String name = scanner.nextLine();
 
-        System.out.println("Which of the questions do you want to answer? [1-4]");
-        int inputSelection = scanner.nextInt();
+        System.out.println("Which of the questions do you want to answer? [1-" + numberOfQuestions + "]");
+        int inputSelection = scanner.nextInt() - 1;
         scanner.nextLine();
 
-        String answerText;
-        Answer answer;
+        if (inputSelection >= 0
+            && inputSelection <= numberOfQuestions - 1) {
 
-        switch (inputSelection){
-            case 1:
-                System.out.println("You are answering this question: " + first);
-                System.out.println("Thank you " + name + " , please write in your answer: ");
-                answerText = scanner.nextLine();
-                answer = new Answer(answerText,name, first.identifier);
-                first.setAnswer(answer);
-                break;
-            case 2:
-                System.out.println("You are answering this question: " + second);
-                System.out.println("Thank you" + name + " , please write in your answer: ");
-                answerText = scanner.nextLine();
-                answer = new Answer(answerText,name, second.identifier);
-                second.setAnswer(answer);
-                break;
-            case 3:
-                System.out.println("You are answering this question: " + third);
-                System.out.println("Thank you" + name + " , please write in your answer: ");
-                answerText = scanner.nextLine();
-                answer = new Answer(answerText,name, third.identifier);
-                third.setAnswer(answer);
-                break;
-            case 4:
-                System.out.println("You are answering this question: " + fourth);
-                System.out.println("Thank you" + name + " , please write in your answer: ");
-                answerText = scanner.nextLine();
-                answer = new Answer(answerText,name, fourth.identifier);
-                fourth.setAnswer(answer);
-                break;
-            default:
-                break;
+            String answerText;
+            Answer answer;
+
+            System.out.println("You are answering this question: " + qArray[inputSelection]);
+            System.out.println("Thank you " + name + " , please write in your answer: ");
+            answerText = scanner.nextLine();
+            answer = new Answer(answerText, name, qArray[inputSelection].identifier);
+            qArray[inputSelection].setAnswer(answer);
+        } else {
+            System.out.println("There is no questions with this number, please try again.");
         }
     }
 
-    public static Question createNewQuestion(Scanner scanner){
+    public static Question createNewQuestion(Scanner scanner) {
         System.out.println("Welcome to the question creator, what is your name:");
         String name = scanner.nextLine();
 
-        System.out.println("Thank you" + name + ", please write in your question: ");
+        System.out.println("Thank you " + name + ", please write in your question: ");
         String questionText = scanner.nextLine();
 
-       return new Question(questionText, name);
+        return new Question(questionText, name, "id-"+numberOfQuestions);
     }
 }

@@ -2,6 +2,7 @@ package questions;
 
 import answers.Answer;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 
 public class Question {
 
@@ -11,7 +12,8 @@ public class Question {
     short score;
     public String identifier;
 
-    Answer answer;
+    Answer[] answer = new Answer[3];
+    int numberOfAnswers;
 
     public Question(String text, String user) {
         this.text = text;
@@ -29,13 +31,20 @@ public class Question {
         this.identifier = identifier;
     }
 
-    public Answer getAnswer() {
-        return answer;
+    public Answer getAnswer(int index) {
+        return answer[index];
+    }
+
+    public Answer[] getAnswer() {
+        return this.answer;
     }
 
     public void setAnswer(Answer answer) {
-        if (answer != null) {
-            this.answer = answer;
+        if (answer != null && numberOfAnswers < this.answer.length){
+            this.answer[numberOfAnswers] = answer;
+            numberOfAnswers++;
+        }else {
+            System.out.println("The answers for this question is full. Apologies.");
         }
     }
 
@@ -47,7 +56,7 @@ public class Question {
             ", creationDateTime=" + creationDateTime +
             ", score=" + score +
             ", identifier='" + identifier + '\'' +
-            ", answer=" + answer +
+            ", answer=" + Arrays.toString(answer) +
             '}';
     }
 }
