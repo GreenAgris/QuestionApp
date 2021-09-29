@@ -10,10 +10,9 @@ public class MainMenu {
     public static Question first = new Question("Some question text.", "Agris", "first");
     public static Question second = new Question("What is you favorite color?", "Agris", "second");
     public static Question third = new Question("What is the meaning of life?", "Agris", "third");
-    //  public static Question fourth;
     public static final String GREEN = "\033[0;32m";
     public static final String WHITE = "\033[0;37m";
-
+    public static boolean doWeWantToContinue = true;
     public static Question[] qArray = {first, second, third, null, null, null, null};
     public static int numberOfQuestions = 3;
     public static Answer afirst = new Answer("This is a test answer", "testUser", "identifier");
@@ -28,6 +27,7 @@ public class MainMenu {
         System.out.println("2: See existing answers");
         System.out.println("3: Create a new question.");
         System.out.println("4: Answer a question");
+
         System.out.println("0: Exit");
 
         int inputSelection = scanner.nextInt();
@@ -62,22 +62,21 @@ public class MainMenu {
                     qArray[numberOfQuestions] = createNewQuestion(scanner);
                     numberOfQuestions++;
                 }
-                //  Answer afirst = new Answer("This is a test answer", "testUser","identifier");
                 break;
             case 4:
                 answerMenu(scanner);
                 break;
             case 0:
-                return;
+                exit();
+                break;
             default:
                 System.out.println("Did not recognize this selection, please try again!");
                 break;
         }
-        printMenu();
     }
 
     public static void exit() {
-
+        doWeWantToContinue = false;
     }
 
     public static void answerMenu(Scanner scanner) {
@@ -111,6 +110,6 @@ public class MainMenu {
         System.out.println("Thank you " + name + ", please write in your question: ");
         String questionText = scanner.nextLine();
 
-        return new Question(questionText, name, "id-"+numberOfQuestions);
+        return new Question(questionText, name, "id-" + numberOfQuestions);
     }
 }

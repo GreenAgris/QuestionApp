@@ -3,7 +3,10 @@ package menu;
 public class Menu {
 
     public static void main(String[] args) {
-        MainMenu.printMenu();
+        do {
+            MainMenu.printMenu();
+        } while (MainMenu.doWeWantToContinue);
+
         System.out.println("Thank you for using this program!");
     }
 
