@@ -27,7 +27,7 @@ public class MainMenu {
         System.out.println("2: See existing answers");
         System.out.println("3: Create a new question.");
         System.out.println("4: Answer a question");
-
+        System.out.println("5: Change and existing answer");
         System.out.println("0: Exit");
 
         int inputSelection = scanner.nextInt();
@@ -66,6 +66,9 @@ public class MainMenu {
             case 4:
                 answerMenu(scanner);
                 break;
+            case 5:
+                answerUpdateMenu(scanner);
+                break;
             case 0:
                 exit();
                 break;
@@ -74,6 +77,46 @@ public class MainMenu {
                 break;
         }
     }
+
+    private static void answerUpdateMenu(Scanner scanner) {
+        System.out.println("For which question do you want to change the answer? [1-" + numberOfQuestions + "]");
+        int inputSelection = scanner.nextInt() - 1;
+        scanner.nextLine();
+
+        if (inputSelection >= 0
+            && inputSelection <= numberOfQuestions - 1) {
+            System.out.println(Arrays.toString(qArray[inputSelection].getAnswer()));
+
+            System.out.println(
+                "For which answer do you want to change the information? [1-" + qArray[inputSelection].getAnswer().length + "]");
+            int answerSelection = scanner.nextInt() - 1;
+            scanner.nextLine();
+            Answer selectedAnswer = qArray[inputSelection].getAnswer()[answerSelection];
+            if (selectedAnswer != null) {
+                System.out.println("What is the number of likes?");
+                answerSelection = scanner.nextInt();
+                scanner.nextLine();
+                selectedAnswer.setLikes(answerSelection);
+
+                System.out.println("What is the number of dislikes?");
+                answerSelection = scanner.nextInt();
+                scanner.nextLine();
+                selectedAnswer.setDislikes(answerSelection);
+
+                System.out.println("Is this answer the accepted one? Y/N :");
+                String stringInput = scanner.nextLine();
+
+                selectedAnswer.setAcceptedAnswer(// Yes / Y  / yes / y
+                    stringInput.startsWith("Y") || stringInput.startsWith("y"));
+
+                System.out.println("The new version of the answer: " + selectedAnswer);
+            } else {
+                System.out.println("This answer does not yet exist!");
+            }
+
+        }
+    }
+
 
     public static void exit() {
         doWeWantToContinue = false;
