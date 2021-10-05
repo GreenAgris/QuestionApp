@@ -6,18 +6,18 @@ import java.util.Scanner;
 import questions.Question;
 
 public class MainMenu {
-
+    // for the Menu print loop boolean value to decide if we want to print the menu again.
+    public static boolean doWeWantToContinue = true;
+    // predefined questions, so that we have already some data when we start off.
     public static Question first = new Question("Some question text.", "Agris", "first");
     public static Question second = new Question("What is you favorite color?", "Agris", "second");
     public static Question third = new Question("What is the meaning of life?", "Agris", "third");
-    public static final String GREEN = "\033[0;32m";
-    public static final String WHITE = "\033[0;37m";
-    public static boolean doWeWantToContinue = true;
     public static Question[] qArray = {first, second, third, null, null, null, null};
-    public static int numberOfQuestions = 3;
-    public static Answer afirst = new Answer("This is a test answer", "testUser", "identifier");
 
-    public static void printMenu() {
+    // the counter for actually existing questions
+    public static int numberOfQuestions = 3;
+
+    public static void printMenuAndCallSelectedAction() {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("Hello! Welcome to the Question APP");
@@ -28,6 +28,7 @@ public class MainMenu {
         System.out.println("3: Create a new question.");
         System.out.println("4: Answer a question");
         System.out.println("5: Change and existing answer");
+        System.out.println("6: Search a word in answers");
         System.out.println("0: Exit");
 
         int inputSelection = scanner.nextInt();
@@ -37,31 +38,12 @@ public class MainMenu {
             case 1:
                 System.out.println("Here will be questions");
                 System.out.println(Arrays.toString(qArray));
-
                 break;
             case 2:
-                System.out.println("Here will be answers - what question do you want to check? [1- " + numberOfQuestions + "]");
-                int questionSelection = scanner.nextInt() - 1;
-                scanner.nextLine();
-                if (questionSelection >= 0
-                    && inputSelection <= numberOfQuestions - 1) {
-                    // can be also extended with a question to user which of the answers to show (not all)
-                    System.out.println(Arrays.toString(qArray[questionSelection].getAnswer()));
-                } else {
-                    System.out.println("There is no questions with this number, please try again.");
-                }
+                printOutAllAnswers(scanner,inputSelection);
                 break;
             case 3:
-                //creating new question logic
-                System.out.println(numberOfQuestions);
-                System.out.println(qArray.length);
-                System.out.println(" ---- ");
-                if (numberOfQuestions == qArray.length) {
-                    System.out.println("Sorry, our data space is full already.");
-                } else {
-                    qArray[numberOfQuestions] = createNewQuestion(scanner);
-                    numberOfQuestions++;
-                }
+                createNewQuestion(scanner);
                 break;
             case 4:
                 answerMenu(scanner);
@@ -146,13 +128,37 @@ public class MainMenu {
         }
     }
 
-    public static Question createNewQuestion(Scanner scanner) {
-        System.out.println("Welcome to the question creator, what is your name:");
-        String name = scanner.nextLine();
 
-        System.out.println("Thank you " + name + ", please write in your question: ");
-        String questionText = scanner.nextLine();
+    public static void printOutAllAnswers(Scanner scanner,int inputSelection ){
+        System.out.println("Here will be answers - what question do you want to check? [1- " + numberOfQuestions + "]");
+        int questionSelection = scanner.nextInt() - 1;
+        scanner.nextLine();
+        if (questionSelection >= 0
+            && inputSelection <= numberOfQuestions - 1) {
+            // can be also extended with a question to user which of the answers to show (not all)
+            System.out.println(Arrays.toString(qArray[questionSelection].getAnswer()));
+        } else {
+            System.out.println("There is no questions with this number, please try again.");
+        }
+    }
 
-        return new Question(questionText, name, "id-" + numberOfQuestions);
+    public static void createNewQuestion(Scanner scanner){
+        //creating new question logic
+        System.out.println(numberOfQuestions);
+        System.out.println(qArray.length);
+        System.out.println(" ---- ");
+        if (numberOfQuestions == qArray.length) {
+            System.out.println("Sorry, our data space is full already.");
+        } else {
+            System.out.println("Welcome to the question creator, what is your name:");
+            String name = scanner.nextLine();
+
+            System.out.println("Thank you " + name + ", please write in your question: ");
+            String questionText = scanner.nextLine();
+            Question newlyCreatedQuestion =  new Question(questionText, name, "id-" + numberOfQuestions);
+
+            qArray[numberOfQuestions] = newlyCreatedQuestion;
+            numberOfQuestions++;
+        }
     }
 }
