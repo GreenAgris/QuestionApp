@@ -13,9 +13,9 @@ public class Answer {
     String questionIdentifier;
 
     public Answer(String text, String user, String questionIdentifier) {
-        this.text = text;
+        this.text = text.strip();
         this.creationDate = LocalDateTime.now();
-        this.user = user;
+        this.user = user.strip();
         this.likes = 0;
         this.dislikes = 0;
         this.acceptedAnswer = false;

@@ -6,6 +6,7 @@ import java.util.Scanner;
 import questions.Question;
 
 public class MainMenu {
+
     // for the Menu print loop boolean value to decide if we want to print the menu again.
     public static boolean doWeWantToContinue = true;
     // predefined questions, so that we have already some data when we start off.
@@ -20,16 +21,16 @@ public class MainMenu {
     public static void printMenuAndCallSelectedAction() {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Hello! Welcome to the Question APP");
-
-        System.out.println("Please select a action from below, by writing in the number:");
-        System.out.println("1: See existing questions");
-        System.out.println("2: See existing answers");
-        System.out.println("3: Create a new question.");
-        System.out.println("4: Answer a question");
-        System.out.println("5: Change and existing answer");
-        System.out.println("6: Search a word in answers");
-        System.out.println("0: Exit");
+        System.out.println(String.format(
+              "Hello! Welcome to the Question APP %n"
+            + "Please select a action from below, by writing in the number: %n"
+            + "1: See existing questions %n"
+            + "2: See existing answers %n"
+            + "3: Create a new question. %n"
+            + "4: Answer a question %n"
+            + "5: Change and existing answer %n"
+            + "6: Search a word in answers %n"
+            + "0: Exit %n"));
 
         int inputSelection = scanner.nextInt();
         scanner.nextLine();
@@ -40,7 +41,7 @@ public class MainMenu {
                 System.out.println(Arrays.toString(qArray));
                 break;
             case 2:
-                printOutAllAnswers(scanner,inputSelection);
+                printOutAllAnswers(scanner, inputSelection);
                 break;
             case 3:
                 createNewQuestion(scanner);
@@ -69,8 +70,8 @@ public class MainMenu {
             && inputSelection <= numberOfQuestions - 1) {
             System.out.println(Arrays.toString(qArray[inputSelection].getAnswer()));
 
-            System.out.println(
-                "For which answer do you want to change the information? [1-" + qArray[inputSelection].getAnswer().length + "]");
+            System.out.println(String.format(
+                "For which answer do you want to change the information? [1-%d]", qArray[inputSelection].getAnswer().length));
             int answerSelection = scanner.nextInt() - 1;
             scanner.nextLine();
             Answer selectedAnswer = qArray[inputSelection].getAnswer()[answerSelection];
@@ -89,7 +90,7 @@ public class MainMenu {
                 String stringInput = scanner.nextLine();
 
                 selectedAnswer.setAcceptedAnswer(// Yes / Y  / yes / y
-                    stringInput.startsWith("Y") || stringInput.startsWith("y"));
+                    stringInput.toLowerCase().startsWith("y"));
 
                 System.out.println("The new version of the answer: " + selectedAnswer);
             } else {
@@ -108,7 +109,7 @@ public class MainMenu {
         System.out.println("Welcome to the answer creator, what is your name: ");
         String name = scanner.nextLine();
 
-        System.out.println("Which of the questions do you want to answer? [1-" + numberOfQuestions + "]");
+        System.out.println(String.format("Which of the questions do you want to answer? [1-%d]", numberOfQuestions));
         int inputSelection = scanner.nextInt() - 1;
         scanner.nextLine();
 
@@ -119,7 +120,7 @@ public class MainMenu {
             Answer answer;
 
             System.out.println("You are answering this question: " + qArray[inputSelection]);
-            System.out.println("Thank you " + name + " , please write in your answer: ");
+            System.out.println(String.format("Thank you %s, please write in your answer: ", name));
             answerText = scanner.nextLine();
             answer = new Answer(answerText, name, qArray[inputSelection].identifier);
             qArray[inputSelection].setAnswer(answer);
@@ -129,8 +130,8 @@ public class MainMenu {
     }
 
 
-    public static void printOutAllAnswers(Scanner scanner,int inputSelection ){
-        System.out.println("Here will be answers - what question do you want to check? [1- " + numberOfQuestions + "]");
+    public static void printOutAllAnswers(Scanner scanner, int inputSelection) {
+        System.out.println(String.format("Here will be answers - what question do you want to check? [1-%d]", numberOfQuestions));
         int questionSelection = scanner.nextInt() - 1;
         scanner.nextLine();
         if (questionSelection >= 0
@@ -142,7 +143,7 @@ public class MainMenu {
         }
     }
 
-    public static void createNewQuestion(Scanner scanner){
+    public static void createNewQuestion(Scanner scanner) {
         //creating new question logic
         System.out.println(numberOfQuestions);
         System.out.println(qArray.length);
@@ -153,9 +154,9 @@ public class MainMenu {
             System.out.println("Welcome to the question creator, what is your name:");
             String name = scanner.nextLine();
 
-            System.out.println("Thank you " + name + ", please write in your question: ");
+            System.out.println(String.format("Thank you %s, please write in your question: ", name));
             String questionText = scanner.nextLine();
-            Question newlyCreatedQuestion =  new Question(questionText, name, "id-" + numberOfQuestions);
+            Question newlyCreatedQuestion = new Question(questionText, name, "id-" + numberOfQuestions);
 
             qArray[numberOfQuestions] = newlyCreatedQuestion;
             numberOfQuestions++;

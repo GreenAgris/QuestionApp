@@ -16,16 +16,16 @@ public class Question {
     int numberOfAnswers;
 
     public Question(String text, String user) {
-        this.text = text;
-        this.user = user;
+        this.text = text.strip();
+        this.user = user.strip();
         this.score = 0;
         this.creationDateTime = LocalDateTime.now();
         this.identifier = "identifier";
     }
 
     public Question(String text, String user, String identifier) {
-        this.text = text;
-        this.user = user;
+        this.text = text.strip();
+        this.user = user.strip();
         this.score = 0;
         this.creationDateTime = LocalDateTime.now();
         this.identifier = identifier;
