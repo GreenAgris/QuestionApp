@@ -1,34 +1,28 @@
 package questions;
 
+import Entry.Entry;
 import answers.Answer;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-public class Question {
+public class Question extends Entry {
 
-    String text;
-    String user;
-    LocalDateTime creationDateTime;
+    private static int idCounter = 0;
     short score;
-    public String identifier;
 
     Answer[] answer = new Answer[3];
     int numberOfAnswers;
 
     public Question(String text, String user) {
-        this.text = text.strip();
-        this.user = user.strip();
+        super(text.strip(), user.strip(), LocalDateTime.now(), idCounter + "identifier");
         this.score = 0;
-        this.creationDateTime = LocalDateTime.now();
-        this.identifier = "identifier";
+        idCounter++;
     }
 
     public Question(String text, String user, String identifier) {
-        this.text = text.strip();
-        this.user = user.strip();
+        super(text.strip(), user.strip(), LocalDateTime.now(), idCounter + identifier);
         this.score = 0;
-        this.creationDateTime = LocalDateTime.now();
-        this.identifier = identifier;
+        idCounter++;
     }
 
     public Answer getAnswer(int index) {
@@ -40,12 +34,16 @@ public class Question {
     }
 
     public void setAnswer(Answer answer) {
-        if (answer != null && numberOfAnswers < this.answer.length){
+        if (answer != null && numberOfAnswers < this.answer.length) {
             this.answer[numberOfAnswers] = answer;
             numberOfAnswers++;
-        }else {
+        } else {
             System.out.println("The answers for this question is full. Apologies.");
         }
+    }
+
+    public String getIdentifier() {
+        return super.questionIdentifier;
     }
 
     @Override
@@ -55,7 +53,7 @@ public class Question {
             ", user='" + user + '\'' +
             ", creationDateTime=" + creationDateTime +
             ", score=" + score +
-            ", identifier='" + identifier + '\'' +
+            ", identifier='" + questionIdentifier + '\'' +
             ", answer=" + Arrays.toString(answer) +
             '}';
     }

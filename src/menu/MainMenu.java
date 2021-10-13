@@ -7,8 +7,10 @@ import questions.Question;
 
 public class MainMenu {
 
+    private Scanner scanner;
+
     // for the Menu print loop boolean value to decide if we want to print the menu again.
-    public static boolean doWeWantToContinue = true;
+    private boolean doWeWantToContinue;
     // predefined questions, so that we have already some data when we start off.
     public static Question first = new Question("Some question text.", "Agris", "first");
     public static Question second = new Question("What is you favorite color?", "Agris", "second");
@@ -18,19 +20,27 @@ public class MainMenu {
     // the counter for actually existing questions
     public static int numberOfQuestions = 3;
 
-    public static void printMenuAndCallSelectedAction() {
-        Scanner scanner = new Scanner(System.in);
+    public boolean isDoWeWantToContinue() {
+        return doWeWantToContinue;
+    }
 
+    public MainMenu() {
+        scanner = new Scanner(System.in);
+        doWeWantToContinue = true;
+    }
+
+    public void printMenuAndCallSelectedAction() {
         System.out.println(String.format(
-              "Hello! Welcome to the Question APP %n"
-            + "Please select a action from below, by writing in the number: %n"
-            + "1: See existing questions %n"
-            + "2: See existing answers %n"
-            + "3: Create a new question. %n"
-            + "4: Answer a question %n"
-            + "5: Change and existing answer %n"
-            + "6: Search a word in answers %n"
-            + "0: Exit %n"));
+            "Hello! Welcome to the Question APP %n"
+                + "Please select a action from below, by writing in the number: %n"
+                + "1: See existing questions %n"
+                + "2: See existing answers %n"
+                + "3: Create a new question. %n"
+                + "4: Answer a question %n"
+                + "5: Change and existing answer %n"
+                + "6: Search a word in answers %n"
+                + "7: Add labels to an answer %n"
+                + "0: Exit %n"));
 
         int inputSelection = scanner.nextInt();
         scanner.nextLine();
@@ -41,17 +51,19 @@ public class MainMenu {
                 System.out.println(Arrays.toString(qArray));
                 break;
             case 2:
-                printOutAllAnswers(scanner, inputSelection);
+                printOutAllAnswers(inputSelection);
                 break;
             case 3:
-                createNewQuestion(scanner);
+                createNewQuestion();
                 break;
             case 4:
-                answerMenu(scanner);
+                answerMenu();
                 break;
             case 5:
-                answerUpdateMenu(scanner);
+                answerUpdateMenu();
                 break;
+            case 7:
+                addLabelToAnswer();
             case 0:
                 exit();
                 break;
@@ -61,7 +73,11 @@ public class MainMenu {
         }
     }
 
-    private static void answerUpdateMenu(Scanner scanner) {
+    private void addLabelToAnswer() {
+        //TODO implement it later
+    }
+
+    private void answerUpdateMenu() {
         System.out.println("For which question do you want to change the answer? [1-" + numberOfQuestions + "]");
         int inputSelection = scanner.nextInt() - 1;
         scanner.nextLine();
@@ -101,11 +117,11 @@ public class MainMenu {
     }
 
 
-    public static void exit() {
+    public void exit() {
         doWeWantToContinue = false;
     }
 
-    public static void answerMenu(Scanner scanner) {
+    public void answerMenu() {
         System.out.println("Welcome to the answer creator, what is your name: ");
         String name = scanner.nextLine();
 
@@ -122,7 +138,7 @@ public class MainMenu {
             System.out.println("You are answering this question: " + qArray[inputSelection]);
             System.out.println(String.format("Thank you %s, please write in your answer: ", name));
             answerText = scanner.nextLine();
-            answer = new Answer(answerText, name, qArray[inputSelection].identifier);
+            answer = new Answer(answerText, name, qArray[inputSelection].getIdentifier());
             qArray[inputSelection].setAnswer(answer);
         } else {
             System.out.println("There is no questions with this number, please try again.");
@@ -130,7 +146,7 @@ public class MainMenu {
     }
 
 
-    public static void printOutAllAnswers(Scanner scanner, int inputSelection) {
+    public void printOutAllAnswers(int inputSelection) {
         System.out.println(String.format("Here will be answers - what question do you want to check? [1-%d]", numberOfQuestions));
         int questionSelection = scanner.nextInt() - 1;
         scanner.nextLine();
@@ -143,7 +159,7 @@ public class MainMenu {
         }
     }
 
-    public static void createNewQuestion(Scanner scanner) {
+    public void createNewQuestion() {
         //creating new question logic
         System.out.println(numberOfQuestions);
         System.out.println(qArray.length);
