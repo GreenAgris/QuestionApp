@@ -16,4 +16,5 @@ public abstract class Entry {
         this.questionIdentifier = questionIdentifier;
     }
 
+    // hasThisText(String searchable)
 }

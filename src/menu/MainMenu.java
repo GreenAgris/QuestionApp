@@ -1,7 +1,9 @@
 package menu;
 
 import answers.Answer;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 import questions.Question;
 
@@ -15,10 +17,7 @@ public class MainMenu {
     public static Question first = new Question("Some question text.", "Agris", "first");
     public static Question second = new Question("What is you favorite color?", "Agris", "second");
     public static Question third = new Question("What is the meaning of life?", "Agris", "third");
-    public static Question[] qArray = {first, second, third, null, null, null, null};
-
-    // the counter for actually existing questions
-    public static int numberOfQuestions = 3;
+    public static ArrayList<Question> qArray = new ArrayList<>(List.of(first, second, third));
 
     public boolean isDoWeWantToContinue() {
         return doWeWantToContinue;
@@ -48,7 +47,7 @@ public class MainMenu {
         switch (inputSelection) {
             case 1:
                 System.out.println("Here will be questions");
-                System.out.println(Arrays.toString(qArray));
+                System.out.println(qArray);
                 break;
             case 2:
                 printOutAllAnswers(inputSelection);
@@ -78,19 +77,19 @@ public class MainMenu {
     }
 
     private void answerUpdateMenu() {
-        System.out.println("For which question do you want to change the answer? [1-" + numberOfQuestions + "]");
+        System.out.println("For which question do you want to change the answer? [1-" + qArray.size() + "]");
         int inputSelection = scanner.nextInt() - 1;
         scanner.nextLine();
 
         if (inputSelection >= 0
-            && inputSelection <= numberOfQuestions - 1) {
-            System.out.println(Arrays.toString(qArray[inputSelection].getAnswer()));
+            && inputSelection <= qArray.size() - 1) {
+            System.out.println(Arrays.toString(qArray.get(inputSelection).getAnswer().values().toArray(new Answer[0])));
 
             System.out.println(String.format(
-                "For which answer do you want to change the information? [1-%d]", qArray[inputSelection].getAnswer().length));
+                "For which answer do you want to change the information? [1-%d]", qArray.get(inputSelection).getAnswer().size()));
             int answerSelection = scanner.nextInt() - 1;
             scanner.nextLine();
-            Answer selectedAnswer = qArray[inputSelection].getAnswer()[answerSelection];
+            Answer selectedAnswer = qArray.get(inputSelection).getAnswer().get(answerSelection);
             if (selectedAnswer != null) {
                 System.out.println("What is the number of likes?");
                 answerSelection = scanner.nextInt();
@@ -125,21 +124,21 @@ public class MainMenu {
         System.out.println("Welcome to the answer creator, what is your name: ");
         String name = scanner.nextLine();
 
-        System.out.println(String.format("Which of the questions do you want to answer? [1-%d]", numberOfQuestions));
+        System.out.println(String.format("Which of the questions do you want to answer? [1-%d]", qArray.size()));
         int inputSelection = scanner.nextInt() - 1;
         scanner.nextLine();
 
         if (inputSelection >= 0
-            && inputSelection <= numberOfQuestions - 1) {
+            && inputSelection <= qArray.size() - 1) {
 
             String answerText;
             Answer answer;
 
-            System.out.println("You are answering this question: " + qArray[inputSelection]);
+            System.out.println("You are answering this question: " + qArray.get(inputSelection));
             System.out.println(String.format("Thank you %s, please write in your answer: ", name));
             answerText = scanner.nextLine();
-            answer = new Answer(answerText, name, qArray[inputSelection].getIdentifier());
-            qArray[inputSelection].setAnswer(answer);
+            answer = new Answer(answerText, name, qArray.get(inputSelection).getIdentifier());
+            qArray.get(inputSelection).setAnswer(answer);
         } else {
             System.out.println("There is no questions with this number, please try again.");
         }
@@ -147,13 +146,13 @@ public class MainMenu {
 
 
     public void printOutAllAnswers(int inputSelection) {
-        System.out.println(String.format("Here will be answers - what question do you want to check? [1-%d]", numberOfQuestions));
+        System.out.println(String.format("Here will be answers - what question do you want to check? [1-%d]", qArray.size()));
         int questionSelection = scanner.nextInt() - 1;
         scanner.nextLine();
         if (questionSelection >= 0
-            && inputSelection <= numberOfQuestions - 1) {
+            && inputSelection <= qArray.size() - 1) {
             // can be also extended with a question to user which of the answers to show (not all)
-            System.out.println(Arrays.toString(qArray[questionSelection].getAnswer()));
+            System.out.println(Arrays.toString(qArray.get(questionSelection).getAnswer().values().toArray(new Answer[0])));
         } else {
             System.out.println("There is no questions with this number, please try again.");
         }
@@ -161,21 +160,16 @@ public class MainMenu {
 
     public void createNewQuestion() {
         //creating new question logic
-        System.out.println(numberOfQuestions);
-        System.out.println(qArray.length);
+        System.out.println(qArray.size());
         System.out.println(" ---- ");
-        if (numberOfQuestions == qArray.length) {
-            System.out.println("Sorry, our data space is full already.");
-        } else {
-            System.out.println("Welcome to the question creator, what is your name:");
-            String name = scanner.nextLine();
+        System.out.println("Welcome to the question creator, what is your name:");
+        String name = scanner.nextLine();
 
-            System.out.println(String.format("Thank you %s, please write in your question: ", name));
-            String questionText = scanner.nextLine();
-            Question newlyCreatedQuestion = new Question(questionText, name, "id-" + numberOfQuestions);
+        System.out.println(String.format("Thank you %s, please write in your question: ", name));
+        String questionText = scanner.nextLine();
+        Question newlyCreatedQuestion = new Question(questionText, name, "id-" + qArray.size());
 
-            qArray[numberOfQuestions] = newlyCreatedQuestion;
-            numberOfQuestions++;
-        }
+        qArray.add(newlyCreatedQuestion);
+
     }
 }

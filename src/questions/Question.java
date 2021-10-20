@@ -1,16 +1,18 @@
 package questions;
 
+import Comment.Comment;
 import Entry.Entry;
 import answers.Answer;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Question extends Entry {
 
     private static int idCounter = 0;
     short score;
-
-    Answer[] answer = new Answer[3];
+    Comment[] comments = new Comment[5];
+    HashMap<Integer, Answer> answer = new HashMap<>();
     int numberOfAnswers;
 
     public Question(String text, String user) {
@@ -25,21 +27,16 @@ public class Question extends Entry {
         idCounter++;
     }
 
-    public Answer getAnswer(int index) {
-        return answer[index];
+    public Answer getAnswer(int id) {
+        return answer.get(id);
     }
 
-    public Answer[] getAnswer() {
+    public HashMap<Integer, Answer> getAnswer() {
         return this.answer;
     }
 
     public void setAnswer(Answer answer) {
-        if (answer != null && numberOfAnswers < this.answer.length) {
-            this.answer[numberOfAnswers] = answer;
-            numberOfAnswers++;
-        } else {
-            System.out.println("The answers for this question is full. Apologies.");
-        }
+        this.answer.put(answer.getId(), answer);
     }
 
     public String getIdentifier() {
@@ -54,7 +51,7 @@ public class Question extends Entry {
             ", creationDateTime=" + creationDateTime +
             ", score=" + score +
             ", identifier='" + questionIdentifier + '\'' +
-            ", answer=" + Arrays.toString(answer) +
+            ", answer=" + Arrays.toString(answer.values().toArray()) +
             '}';
     }
 }

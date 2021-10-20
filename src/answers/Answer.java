@@ -1,14 +1,16 @@
 package answers;
 
+import Comment.Comment;
 import Entry.Entry;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 
 public class Answer extends Entry {
 
     private static int answerID = 0;
     private String[] allLabels = {"SameAuthor", "Spoiler", "Edited", "Archived", "Humorous"};
-
-    int id;
+    ArrayList<Comment> comments = new ArrayList<>();
+    final int id;
     int likes;
     int dislikes;
     boolean acceptedAnswer;
@@ -29,7 +31,7 @@ public class Answer extends Entry {
         return labels;
     }
 
-    public void setLabels(String labels) {
+    public void setLabels(final String labels) {
         // "SameAuthor, archived"
         String[] testableArray = labels.split(",");
         boolean isItInLabels = true;
@@ -49,6 +51,13 @@ public class Answer extends Entry {
         } else {
             System.out.println("This label was not allowed");
         }
+    }
+
+
+    public boolean addComment(String text, final String user) {
+        Comment comment = new Comment(text.strip(), user, LocalDateTime.now(), this.questionIdentifier, id + "");
+        this.comments.add(comment);
+        return true;
     }
 
     public int getLikes() {
@@ -77,6 +86,11 @@ public class Answer extends Entry {
 
     public void setAcceptedAnswer(boolean acceptedAnswer) {
         this.acceptedAnswer = acceptedAnswer;
+    }
+
+
+    public int getId() {
+        return id;
     }
 
     @Override
