@@ -17,6 +17,11 @@ public class Answer extends Entry {
 
     String labels; // "SameAuthor, Archived"
 
+    public Answer(int id) {
+        super("", "", LocalDateTime.now(), "");
+        this.id = id;
+    }
+
     public Answer(String text, String user, String questionIdentifier) {
         super(text.strip(), user.strip(), LocalDateTime.now(), questionIdentifier);
         this.user = user.strip();
