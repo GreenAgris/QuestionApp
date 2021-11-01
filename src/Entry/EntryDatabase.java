@@ -1,7 +1,6 @@
 package Entry;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import static util.Utility.GREEN;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,42 +9,46 @@ import java.time.LocalDateTime;
 
 public class EntryDatabase {
 
-    public static Entry selectEntry(int id, Entry entry){
+    public static Entry selectEntry(Statement statement,int id, Entry entry) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/agris.traskovs/code/QuestionApp/sql/QuestionDB.db");
-            Statement statement = connection.createStatement();
-
-            statement.execute("SELECT * FROM Entry WHERE id="+id+";");
+            statement.execute("SELECT * FROM Entry WHERE id=" + id + ";");
 
             ResultSet rs = statement.getResultSet();
             rs.next();
 
-            entry.text = rs.getString("text");
-            entry.user = rs.getString("user");
+            entry.text = rs.getString("entryText");
+            entry.user = rs.getString("userName");
             entry.creationDateTime = LocalDateTime.parse(rs.getString("creationDateTime"));
             entry.questionIdentifier = rs.getString("questionIdentifier");
 
-        }catch (SQLException exception){
-            System.out.println("This was not possible to retrieve.");
+        } catch (SQLException exception) {
+            System.out.println("This Entry was not possible to retrieve.");
         }
 
         return entry;
     }
 
-    public static int saveEntry (Entry entry){
+    public static int saveEntry(Statement statement, Entry entry) {
         try {
-            Connection connection = DriverManager.getConnection("jdbc:sqlite:/Users/agris.traskovs/code/QuestionApp/sql/QuestionDB.db");
-            Statement statement = connection.createStatement();
-            statement.execute("INSERT INTO Entry (\"text\",\"user\",creationDateTime,questionIdentifier) VALUES" +
-            "('"+entry.text+"','"+entry.user+"','"+entry.creationDateTime.toString()+"','"+ entry.questionIdentifier+"');");
+            System.out.println(GREEN + "Connection done");
+            String executable = "INSERT INTO Entry ( entryText, userName, creationDateTime, questionIdentifier) VALUES" +
+                "('" + entry.text + "','" + entry.user + "','" + entry.creationDateTime.toString() + "','" + entry.questionIdentifier
+                + "');";
+            System.out.println(GREEN + "Statement will be :");
+            System.out.println(executable);
+            statement.execute(executable);
+
             //return id
+            System.out.println(GREEN + "insertion");
             String queryLastRowInserted = "SELECT last_insert_rowid() AS id";
             statement.execute(queryLastRowInserted);
+            System.out.println(GREEN + "id retrieved ");
             ResultSet rs = statement.getResultSet();
             rs.next();
             int generatedID = rs.getInt("id");
+            System.out.println(GREEN + "id -> " + generatedID);
             return generatedID;
-        }catch (SQLException exception){
+        } catch (SQLException exception) {
             System.out.println("This was not possible to save.");
         }
 

@@ -1,23 +1,36 @@
 package menu;
 
 import answers.Answer;
+import answers.AnswerDatabase;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
 import questions.Question;
+import questions.QuestionDatabase;
+import util.DBHelper;
 
 public class MainMenu {
 
     private Scanner scanner;
+    private ArrayList<Question> qArray;
 
     // for the Menu print loop boolean value to decide if we want to print the menu again.
     private boolean doWeWantToContinue;
     // predefined questions, so that we have already some data when we start off.
-    public static Question first = new Question("Some question text.", "Agris", "first");
-    public static Question second = new Question("What is you favorite color?", "Agris", "second");
-    public static Question third = new Question("What is the meaning of life?", "Agris", "third");
-    public static ArrayList<Question> qArray = new ArrayList<>(List.of(first, second, third));
+    DBHelper helper;
+
+    public ArrayList<Question> getqArray() {
+        return qArray;
+    }
+
+    public void setqArray(ArrayList<Question> qArray) {
+        this.qArray = qArray;
+    }
+
+   // public static Question first = new Question("Some question text.", "Agris", "first");
+ //   public static Question second = new Question("What is you favorite color?", "Agris", "second");
+   // public static Question third = new Question("What is the meaning of life?", "Agris", "third");
+   // public static ArrayList<Question> qArray = new ArrayList<>(List.of(first, second, third));
 
     public boolean isDoWeWantToContinue() {
         return doWeWantToContinue;
@@ -26,6 +39,8 @@ public class MainMenu {
     public MainMenu() {
         scanner = new Scanner(System.in);
         doWeWantToContinue = true;
+        helper = new DBHelper();
+        this.setqArray(QuestionDatabase.getQuestionList(helper.getStatment()));
     }
 
     public void printMenuAndCallSelectedAction() {
@@ -61,6 +76,9 @@ public class MainMenu {
             case 5:
                 answerUpdateMenu();
                 break;
+            case 6 :
+                searchWord();
+                break;
             case 7:
                 addLabelToAnswer();
             case 0:
@@ -69,6 +87,22 @@ public class MainMenu {
             default:
                 System.out.println("Did not recognize this selection, please try again!");
                 break;
+        }
+    }
+
+    private void searchWord() {
+        System.out.println("What is the term you are searching for? ");
+        String  inputText = scanner.nextLine().trim();
+
+        if(inputText.isEmpty()){
+            System.out.println("Can not find an empty term! ");
+        }else {
+            for (Question question: qArray){
+              question.hasThisText(inputText);
+                for (Answer ans : question.getAnswer().values()){
+                    ans.hasThisText(inputText);
+                }
+            }
         }
     }
 
@@ -106,7 +140,7 @@ public class MainMenu {
 
                 selectedAnswer.setAcceptedAnswer(// Yes / Y  / yes / y
                     stringInput.toLowerCase().startsWith("y"));
-
+                //AnswerDatabase.updateAnswer(helper.getStatment(), selectedAnswer);
                 System.out.println("The new version of the answer: " + selectedAnswer);
             } else {
                 System.out.println("This answer does not yet exist!");
@@ -114,7 +148,6 @@ public class MainMenu {
 
         }
     }
-
 
     public void exit() {
         doWeWantToContinue = false;
@@ -138,6 +171,7 @@ public class MainMenu {
             System.out.println(String.format("Thank you %s, please write in your answer: ", name));
             answerText = scanner.nextLine();
             answer = new Answer(answerText, name, qArray.get(inputSelection).getIdentifier());
+            AnswerDatabase.saveAnswer(helper.getStatment(), answer);
             qArray.get(inputSelection).setAnswer(answer);
         } else {
             System.out.println("There is no questions with this number, please try again.");
@@ -168,7 +202,7 @@ public class MainMenu {
         System.out.println(String.format("Thank you %s, please write in your question: ", name));
         String questionText = scanner.nextLine();
         Question newlyCreatedQuestion = new Question(questionText, name, "id-" + qArray.size());
-
+        QuestionDatabase.saveQuestion(helper.getStatment(), newlyCreatedQuestion);
         qArray.add(newlyCreatedQuestion);
 
     }
