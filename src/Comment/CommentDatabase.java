@@ -1,4 +1,4 @@
-package answers;
+package Comment;
 
 import Entry.EntryDatabase;
 import java.sql.ResultSet;
@@ -6,20 +6,21 @@ import java.sql.SQLDataException;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class AnswerDatabase {
+public class CommentDatabase {
 
-    public static int saveAnswer(Statement statement, Answer input) {
+
+    public static int saveComment(Statement statement, Comment comment) {
         try {
-            int entryId = EntryDatabase.saveEntry(statement, input);
+            int entryId = EntryDatabase.saveEntry(statement, comment);
             if (entryId == -1) {
                 throw new SQLDataException();
             }
 
-            statement.execute("INSERT INTO Answer (likes,dislikes,acceptedAnswer,labels,entryId) VALUES" +
 
-                "(" + input.likes + "," + input.dislikes + "," + (input.acceptedAnswer ? 1 : 0) + ",'" + input.labels + "', " + entryId
-                + ");");
-            //return id
+            statement.execute("INSERT INTO Comment (answerIdentifier, entryId) VALUES" +
+
+                "(" + comment.answerIdentifier + "," + entryId + ");");
+
             String queryLastRowInserted = "SELECT last_insert_rowid() AS id";
             statement.execute(queryLastRowInserted);
             ResultSet rs = statement.getResultSet();
@@ -33,27 +34,23 @@ public class AnswerDatabase {
         } catch (SQLException exception) {
             System.out.println("This was not possible to save.");
         }
-
         return -1;
-
     }
 
-    public static Answer getAnswer(Statement statement, int id) {
+
+    public static Comment getComment(Statement statement, int id) {
         try {
-            statement.execute("SELECT * FROM Answer WHERE id = " + id + ";");
+
+            statement.execute("SELECT * FROM Comments WHERE id = " + id + ";");
             ResultSet rs = statement.getResultSet();
             rs.next();
 
-            Answer output = new Answer(id);
+            Comment comment = new Comment();
             int entryId = rs.getInt("entryId");
-            output.likes = rs.getInt("likes");
-            output.dislikes = rs.getInt("dislikes");
-            output.acceptedAnswer = rs.getInt("acceptedAnswer") == 1;
-            output.labels = rs.getString("labels");
+            comment.answerIdentifier = rs.getString("answerIdentifier");
+            EntryDatabase.selectEntry(statement, entryId, comment);
 
-            EntryDatabase.selectEntry(statement, entryId, output);
-
-            return output;
+            return comment;
         } catch (SQLException exception) {
             System.out.println("This was not possible to retrieve.");
         }

@@ -13,7 +13,6 @@ public class Question extends Entry {
     short score;
     Comment[] comments = new Comment[5];
     HashMap<Integer, Answer> answer = new HashMap<>();
-    int numberOfAnswers;
 
     public Question(String text, String user) {
         super(text.strip(), user.strip(), LocalDateTime.now(), idCounter + "identifier");

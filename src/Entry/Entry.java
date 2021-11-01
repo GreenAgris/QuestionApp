@@ -16,5 +16,9 @@ public abstract class Entry {
         this.questionIdentifier = questionIdentifier;
     }
 
-    // hasThisText(String searchable)
+     public void hasThisText(String searchable){
+        if (text.contains(searchable)) {
+            System.out.println(questionIdentifier+ "  -> " + text);
+        }
+     }
 }
