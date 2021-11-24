@@ -12,3 +12,9 @@ The menu is set in terminal output.
 * One Answer per Question can be set as the "approved" answer.
 
 Additional functionality can be added, like comments on Questions and Answers, partial text search, search based on username, etc.
+
+Core entities to be used:
+* Menu - prints out the selection options, handles input from the user. 
+* Question - has creation date, potentially a list of answers, holds information on likes and dislikes, comments, user who created the question.
+* Answers - has creation datetime, likes and dislikes, approved answer status, some form of "link" to the question given, user who created the answer.
+* Database connection handler.
